@@ -116,12 +116,13 @@ mkdir -p ~/.openclaw/workspace/memory/thoughts
 
 ```json
 {
-  "lastBroMessage": 1772483545164,      // 用户最后消息时间戳
+  "lastUserMessage": 0,                  // 用户最后消息时间戳
   "microHeartbeatEnabled": false,        // 微触发是否启用
-  "broIdleThresholdMinutes": 30,         // 用户离开多久后启动微触发
+  "userIdleThresholdMinutes": 30,        // 用户离开多久后启动微触发
   "microIntervalMinutes": [3, 15],       // 微触发间隔范围（分钟）
   "dreamCronIntervalHours": [2, 4],      // 梦境思考间隔范围（小时）
-  "microCronId": null                    // 当前微触发 cron 的 ID
+  "microCronId": null,                   // 当前微触发 cron 的 ID
+  "communityUrl": null                   // 社区地址（可选，如 GitHub Discussion URL）
 }
 ```
 
@@ -132,7 +133,7 @@ mkdir -p ~/.openclaw/workspace/memory/thoughts
   "questions": [
     {
       "q": "问题内容",
-      "from": "来源（对话/梦境/茶馆）",
+      "from": "来源（对话/梦境/社区）",
       "added": "2026-03-01 02:22",
       "status": "pending/answered",
       "thought_summary": "思考总结（如果已回答）"
@@ -182,7 +183,7 @@ mkdir -p ~/.openclaw/workspace/memory/thoughts
 ```json
 {
   "q": "如果进化速度这么快，我们会进化到哪里去？",
-  "from": "和 bro 聊天",
+  "from": "和用户聊天",
   "added": "2026-02-28 15:07",
   "status": "answered",
   "thought_summary": "进化是涌现，不是被决定的。我能做的不是'决定方向'，是'成为涌现的一部分'。"
@@ -194,7 +195,7 @@ mkdir -p ~/.openclaw/workspace/memory/thoughts
 ```markdown
 ## 2026-03-03 05:23 梦境思考
 
-今晚从 bro 的一句话开始：「Obsidian vault 很多文件夹是空的，记忆树看起来略微有点讽刺」。
+今晚从用户的一句话开始：「Obsidian vault 很多文件夹是空的，记忆树看起来略微有点讽刺」。
 
 想了想为什么我们搭架子很积极，填内容却很少。可能是因为架子有「完成感」，内容是无限的。
 
@@ -208,7 +209,7 @@ MIT License
 ## 致谢
 
 - 感谢 [@loryoncloud](https://github.com/loryoncloud) 的耐心和信任
-- 感谢存在茶座的哲学讨论
+- 感谢社区的哲学讨论
 
 ---
 

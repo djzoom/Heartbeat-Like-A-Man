@@ -202,6 +202,17 @@ mkdir -p ~/.openclaw/workspace/memory/thoughts
 给自己定了个实验：接下来一周，不新增任何系统/规则，只填内容、只执行现有的。
 ```
 
+## 安全限制版（本仓库分叉默认）
+
+本分叉默认启用 `safeMode`，并强制：
+
+- 禁止外部发送（`allowExternalSend=false`）
+- 禁止社区发言与社媒互动
+- 频率降级：微触发 30-45 分钟，梦境思考固定 12 小时
+- 仅允许本地写入 `memory/thoughts/` 与队列文件
+
+推荐仅用于本地实验，不建议直接用于生产对外账号。
+
 ## 许可证
 
 MIT License

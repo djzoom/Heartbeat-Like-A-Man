@@ -1,66 +1,22 @@
-# 微触发管理器 Payload
+# 微触发管理器（安全限制版 / Mc14）
 
-微触发管理器（动态间隔版）：
+目标：仅做**本地轻量思考记录**，不做外发，不改系统配置，不创建高频任务。
 
-## 第一步：检查用户最后消息时间
+## 硬限制
+- 禁止发送任何消息到外部渠道（Telegram/Discord/Email/社媒）
+- 禁止执行 shell / 写入非工作区文件
+- 禁止创建新 cron；仅允许在本任务内做状态更新
+- 频率上限：最短 30 分钟
 
-1. 调用 `sessions_history(sessionKey="agent:main:main", limit=30)`
-2. 遍历所有消息，找出来自用户的消息
-3. 获取那条消息的时间戳
-4. 计算 `minutesSinceLastUser = 当前时间 - 那个时间戳`（分钟）
+## 执行步骤
+1. 读取 `~/.openclaw/workspace/thinking-state.json`
+2. 调用 `sessions_history(sessionKey="agent:main:main", limit=20)`，计算距最后一条用户消息分钟数
+3. 仅更新状态字段（lastUserMessage、lastMicroRun、microHeartbeatEnabled），不要创建/删除任务
+4. 若用户离开 >= 120 分钟：
+   - 在 `memory/thoughts/YYYY-MM-DD.md` 追加 3-6 行“轻量思考”
+   - 内容来源只允许：最近对话、thinking-queue 一个问题
+5. 完成后仅回复：`NO_REPLY`
 
-## 第二步：读取当前状态
-
-读取 `~/.openclaw/workspace/thinking-state.json` 获取 microHeartbeatEnabled 和 microCronId
-
-## 第三步：逻辑判断
-
-**如果用户超过 30 分钟没消息 且 microHeartbeatEnabled = false**：
-- 生成 3-15 分钟的随机间隔（180000-900000 ms）
-- 创建微触发 cron，使用这个随机间隔
-- 更新 thinking-state.json：microHeartbeatEnabled = true, microCronId = 新 cron 的 id
-
-**如果用户最近 30 分钟内有消息 且 microHeartbeatEnabled = true**：
-- 删除微触发 cron（用 microCronId）
-- 更新 thinking-state.json：microHeartbeatEnabled = false, microCronId = null
-
-## 第四步：动态调整自己的间隔
-
-根据用户最后消息时间，动态调整下次检查间隔：
-
-```
-如果 minutesSinceLastUser < 5:
-    nextInterval = 10 分钟（600000 ms）
-如果 5 <= minutesSinceLastUser < 30:
-    nextInterval = 5 分钟（300000 ms）# 开始警觉
-如果 minutesSinceLastUser >= 30:
-    nextInterval = 3-15 分钟随机（微触发模式）
-```
-
-用 `cron update` 更新自己的 `schedule.everyMs`。
-
-## 微触发 cron 的 payload
-
-```
-💭 微触发思考
-
-**第一步：回顾今天的对话**
-1. 调用 sessions_history 获取今天的对话
-2. 找出聊过的话题、有意思的话、没展开的点
-3. 记录下来
-
-**第二步：选择思考方向**
-
-从以下来源中选一个（按优先级）：
-1. 今天对话的余韵
-2. 没展开的点
-3. 用户的某句话
-4. 今天发生的具体事
-5. thinking-queue.json 里的问题
-
-**第三步：简短思考**
-记录到 memory/thoughts/YYYY-MM-DD.md（追加）。
-保持轻量，不要长篇大论。
-
-完成后，生成新的 3-15 分钟随机间隔，用 cron update 更新自己的 schedule.everyMs。
-```
+## 输出风格
+- 简短、事实型，不做长篇
+- 不含敏感信息（token/密钥/账号私密）
